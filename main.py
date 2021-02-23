@@ -16,11 +16,11 @@ def rk2(theta, zeta, v, n, h, derivsRK):
         xout = new value of x after a step of size tau
     """
     half_h = 0.5 * h
-    F1 = derivsRK(n, [theta, zeta, v])
+    f = derivsRK(n, [theta, zeta, v])
     theta_half = theta + half_h
     zeta_temp = zeta + half_h * F1
-    F2 = derivsRK(n, [theta_half, zeta_temp, v])
-    zeta_out = zeta + h * F2
+    g = derivsRK(n, [theta_half, zeta_temp, v])
+    zeta_out = f + h * g
     return zeta_out
 
 def odes(n,s):
@@ -47,5 +47,7 @@ def odes(n,s):
 
 #SOLUTION FOR n = 0
 zeta = 0; u = 1; v = 0 #initial conditions from polytropes lecture
-
+h = 1 #timestep
+solution_0 = rk2(u,zeta,v,0,h,odes)
+print(solution_0)
 
