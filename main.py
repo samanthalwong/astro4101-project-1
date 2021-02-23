@@ -1,11 +1,12 @@
 import numpy as np
 
 #QUESTION 1
-def rk2(theta, zeta, n, h, derivsRK):
+def rk2(theta, zeta, v, n, h, derivsRK):
     """Runge-Kutta integrator (2nd order)
        Input arguments -
         theta = independent variable
         zeta = current value of dependent variable
+        v = du/dzeta
         n = polytropic index
         h = step size (delta x)
         derivsRK = right hand side of the ODE; derivsRK is the
@@ -15,10 +16,10 @@ def rk2(theta, zeta, n, h, derivsRK):
         xout = new value of x after a step of size tau
     """
     half_h = 0.5 * h
-    F1 = derivsRK(n, [theta, zeta])
+    F1 = derivsRK(n, [theta, zeta, v])
     theta_half = theta + half_h
     zeta_temp = zeta + half_h * F1
-    F2 = derivsRK(n, [theta_half, zeta_temp])
+    F2 = derivsRK(n, [theta_half, zeta_temp, v])
     zeta_out = zeta + h * F2
     return zeta_out
 
@@ -43,3 +44,8 @@ def odes(n,s):
     dv_dzeta = -u**n-2*v/zeta
 
     return np.array([du_dzeta, dv_dzeta])
+
+#SOLUTION FOR n = 0
+zeta = 0; u = 1; v = 0 #initial conditions from polytropes lecture
+
+
