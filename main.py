@@ -4,8 +4,8 @@ import numpy as np
 def rk2(theta, zeta, h, derivsRK):
     """Runge-Kutta integrator (2nd order)
        Input arguments -
-        n = polytropic index
-        x = current value of dependent variable
+        theta = independent variable
+        zeta = current value of dependent variable
         h = step size (delta x)
         derivsRK = right hand side of the ODE; derivsRK is the
                   name of the function which returns dx/dt
