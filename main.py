@@ -58,10 +58,12 @@ for n in poly_index:
     index = 0 #index to keep track of when theta = 0
     theta_array = np.empty(nsteps)
     xi_array = np.empty(nsteps)
+    v_array = np.empty(nsteps)
     for i in range(nsteps):
         #update solution arrays with solutions from previous iteration
         theta_array[i] = u
         xi_array[i] = xi
+        v_array = v
         #find new state vector using rk2 solver
         state = rk2(u, xi, v, n, h, odes)
         u = state[1]
@@ -74,16 +76,16 @@ for n in poly_index:
     plt.plot(xi_array[0:index], theta_array[0:index], label="n = %0.1f" %n) #plot results
 
 #ANALYTIC SOLUTIONS FOR n = 0, 1, 5
-xi = np.linspace(0.000001,10,10000)
-theta_0 = 1 - (xi**2)/6
-theta_1 = np.sin(xi)/xi
-theta_5 = 1/(np.sqrt(1+(xi**2)/3))
+xi_analytic = np.linspace(0.000001,10,10000)
+theta_0 = 1 - (xi_analytic**2)/6
+theta_1 = np.sin(xi_analytic)/xi_analytic
+theta_5 = 1/(np.sqrt(1+(xi_analytic**2)/3))
 
 theta_0 = theta_0[0: np.where(theta_0 < 0)[0][0]] #stop computing when theta < 0
 
-plt.plot(xi[0:theta_0.size], theta_0, label="n = 0")
-plt.plot(xi[0:theta_1.size], theta_1, label="n = 1")
-plt.plot(xi[0:theta_5.size], theta_5, label="n = 5")
+plt.plot(xi_analytic[0:theta_0.size], theta_0, label="n = 0")
+plt.plot(xi_analytic[0:theta_1.size], theta_1, label="n = 1")
+plt.plot(xi_analytic[0:theta_5.size], theta_5, label="n = 5")
 
 plt.xlabel("xi")
 plt.ylabel("theta")
@@ -94,5 +96,31 @@ plt.show()
 
 #QUESTION 2
 
+#a)
+M = 1.99e33
+r = 6.96e10
+rho_c = (-M*xi)/(4*np.pi*r**3*v_array)
+print("Central Density of the Sun: %0.1f g/cm^3" %rho_c)
 
+#b)
+alpha = r/xi
+print("Length Scale, Alpha: %0.1f cm" %alpha)
 
+#c)
+n = 3.25
+G = 6.67e-8
+K = (4*np.pi*G*alpha**2)/((n+1)*rho_c**((1-n)/n))
+print("Polytropic Constant, K: %0.1f " %K)
+
+#d)
+P_c = (G*M**2)/(r**4*4*np.pi*(n+1)*v**2)
+print("Central Pressure: %0.1f Ba" %P_c)
+
+#e)
+mH = 1.00784
+m = 0.6*mH
+k = 1.38064852e-23
+T_c = (P_c*M*m)/(rho_c*k)
+print("Central Temperature: %f K" %T_c) #this number is WAY too big
+
+#QUESTION 3
