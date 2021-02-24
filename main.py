@@ -18,8 +18,8 @@ def rk2(theta, zeta, v, n, h, derivsRK):
         zeta_out = new value of zeta after a step of size tau
     """
     zeta_temp = zeta
-    zeta = zeta + h
-    v = v + h*odes(n, [theta, zeta_temp, v])[1]
+    zeta = zeta + h #increment zeta by the timestep value
+    v = v + h*odes(n, [theta, zeta_temp, v])[1] #use midpoint method to compute new v and u
     theta = theta + h*odes(n, [theta, zeta_temp, v])[0]
     return [v, theta, zeta]
 
@@ -48,17 +48,18 @@ def odes(n,s):
 #SOLUTION FOR n = 1.5
 poly_index = [1.5, 3, 3.25] #initial conditions from polytropes lecture
 h = 1e-3 #timestep
-nsteps = 10000
+nsteps = 10000 #number of steps to iterate through
 
 for n in poly_index:
-    zeta = 0.000001
+    #initial conditions
+    zeta = 0.000001 #slightly more than zero to avoid divergence at the origin
     u = 1
     v = 0
-    index = 0
+    index = 0 #index to keep track of when theta = 0
     theta_array = np.empty(nsteps)
     zeta_array = np.empty(nsteps)
     for i in range(nsteps):
-        #update arrays with solutions from previous iteration
+        #update solution arrays with solutions from previous iteration
         theta_array[i] = u
         zeta_array[i] = zeta
         #find new state vector using rk2 solver
@@ -66,11 +67,11 @@ for n in poly_index:
         u = state[1]
         v = state[0]
         zeta = state[2]
-        if u < 0.00001 or math.isnan(u):
+        if u < 0.00001 or math.isnan(u): #if theta is very close or less than zero, exit loop
             index = index - 1
             break
         index = index + 1
-    plt.plot(zeta_array[0:index], theta_array[0:index], label="n = %0.1f" %n)
+    plt.plot(zeta_array[0:index], theta_array[0:index], label="n = %0.1f" %n) #plot results
 
 #ANALYTIC SOLUTIONS FOR n = 0, 1, 5
 zeta = np.linspace(0.000001,10,10000)
@@ -78,7 +79,7 @@ theta_0 = 1 - (zeta**2)/6
 theta_1 = np.sin(zeta)/zeta
 theta_5 = 1/(np.sqrt(1+(zeta**2)/3))
 
-theta_0 = theta_0[0: np.where(theta_0 < 0)[0][0]]
+theta_0 = theta_0[0: np.where(theta_0 < 0)[0][0]] #stop computing when theta < 0
 
 plt.plot(zeta[0:theta_0.size], theta_0, label="n = 0")
 plt.plot(zeta[0:theta_1.size], theta_1, label="n = 1")
