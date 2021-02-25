@@ -124,3 +124,9 @@ T_c = (P_c*M*m)/(rho_c*k)
 print("Central Temperature: %f K" %T_c) #this number is WAY too big
 
 #QUESTION 3
+r_model = np.loadtxt('solartable.csv', dtype = float, delimiter=',', skiprows=1, usecols=(0))
+rho_model = np.loadtxt('solartable.csv', dtype = float, delimiter=',', skiprows=1, usecols=(4))
+
+r_rsun = r_model/r
+plt.plot(rho_model,r_rsun, 'k', label="Standard Solar Model")
+plt.show()
