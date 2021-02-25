@@ -127,6 +127,16 @@ print("Central Temperature: %f K" %T_c) #this number is WAY too big
 r_model = np.loadtxt('solartable.csv', dtype = float, delimiter=',', skiprows=1, usecols=(0))
 rho_model = np.loadtxt('solartable.csv', dtype = float, delimiter=',', skiprows=1, usecols=(4))
 
-r_rsun = r_model/r
-plt.plot(rho_model,r_rsun, 'k', label="Standard Solar Model")
+#r/rsun term and rho for n = 3.25 model
+rho_soln = rho_c*(theta_array[0:index]**n)
+r_soln = alpha*xi_array[0:index]
+rsoln_rsun = r_soln/r
+
+plt.plot(rsoln_rsun, rho_soln, 'r', label="n = 3.25 Model")
+plt.plot(r_model, rho_model, 'k', label="Standard Solar Model")
+plt.ylabel("Rho")
+plt.xlabel("R/Rsun")
+plt.title("Rho vs. R/Rsun for Standard Solar Model and n = 3.25 Model")
+plt.grid()
+plt.legend()
 plt.show()
